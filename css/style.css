@@ -276,7 +276,8 @@ body {
   .tabs a { font-size: 12px; padding: 8px 10px; }
   .sep { margin: 12px 12px 0; }
   .ph { max-width: 92vw; max-height: none; }
-  #cults { max-width: none; width: 90vw; padding: 10px 10px 22px; }
+  #cults { max-width: none; width: 96vw; padding: 10px 8px 22px; }
+  #cults .ph { max-width: 100%; }
   .content { padding: 16px 12px 60px; }
   .good-row { gap: 20px; margin: 16px 0 4px; }
   .block { min-width: 0; flex: 1 1 100%; }
