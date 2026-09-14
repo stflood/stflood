@@ -1,2 +1,2 @@
-var SUPABASE_URL = "";
-var SUPABASE_ANON_KEY = "";
+var SUPABASE_URL = "https://lkllmxdjrdlsteeeidjz.supabase.co";
+var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxrbGxteGRqcmRsc3RlZWVpZGp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkzODY3MjAsImV4cCI6MjEwNDk2MjcyMH0.aCw-epmpRr67H2xtB-Hot18-lxc1RBWK2Xa_jbLh27I";
