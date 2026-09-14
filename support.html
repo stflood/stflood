@@ -26,56 +26,36 @@
 <div class="content">
 
   <div class="support-center">
-
-    <div id="supListView">
-      <div class="sup-head">
-        <div class="sup-head-title">Обращения</div>
-        <button class="support-add" id="supAdd" title="Новое обращение">+</button>
-      </div>
-      <div id="supList" class="support-list"></div>
-      <div class="support-empty" id="supEmpty">Пока нет обращений</div>
+    <div class="sup-head">
+      <div class="sup-head-title">Обращения</div>
     </div>
 
-    <div id="supThreadView" style="display:none">
-      <div class="sup-thread-head">
-        <button class="sup-back" id="supBack">← назад</button>
-        <div class="sup-thread-title" id="supThreadTitle"></div>
-        <div class="sup-thread-status status-open" id="supThreadStatus"></div>
-      </div>
-      <div class="sup-thread-meta" id="supThreadMeta"></div>
-      <div class="sup-thread-msgs" id="supThreadMsgs"></div>
-      <div class="sup-closed-box" id="supClosedBox" style="display:none">
-        <div class="sup-closed-label">Обращение закрыто</div>
-        <div class="sup-closed-reason" id="supClosedReason"></div>
-      </div>
-      <div class="sup-thread-input">
-        <input id="supReplyText" type="text" placeholder="Напишите ответ...">
-        <button class="sup-send" id="supReplyBtn">Отправить</button>
-      </div>
-      <div class="sup-thread-actions">
-        <button class="sup-btn-danger" id="supCloseBtn">Закрыть обращение</button>
-      </div>
-    </div>
+    <div class="sup-feed" id="supFeed"></div>
+    <div class="support-empty" id="supEmpty">Пока нет обращений</div>
 
-  </div>
-
-</div>
-
-<div class="support-modal" id="supCreateModal">
-  <div class="support-modal-box">
-    <div class="support-modal-title">Новое обращение</div>
-    <div class="support-modal-label">Тема / вопрос</div>
-    <input id="supInputTitle" type="text" placeholder="Кратко опишите проблему">
-    <div class="support-modal-label">Описание</div>
-    <textarea id="supInputText" placeholder="Подробно опишите проблему или баг..."></textarea>
-    <div class="support-modal-btns">
-      <button class="support-btn support-btn-ghost" id="supCancel">Отмена</button>
-      <button class="support-btn support-btn-primary" id="supSave">Отправить</button>
+    <div class="sup-dialog-input">
+      <input id="supDialogInput" type="text" placeholder="Напишите сообщение (Enter = отправить)...">
+      <button class="sup-send" id="supDialogSend">Отправить</button>
     </div>
   </div>
+
 </div>
 
 <div class="support-modal" id="supCloseModal">
+  <div class="support-modal-box">
+    <div class="support-modal-title">Закрыть обращение</div>
+    <div class="support-modal-label">Причина закрытия</div>
+    <textarea id="supCloseReason" placeholder="Напишите, почему закрываете обращение..."></textarea>
+    <div class="sup-close-error" id="supCloseError">Напишите причину — пустое поле нельзя!</div>
+    <div class="support-modal-btns">
+      <button class="support-btn support-btn-ghost" id="supCloseCancel">Отмена</button>
+      <button class="support-btn support-btn-danger" id="supCloseConfirm">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/support.js"></script>
+</body>
   <div class="support-modal-box">
     <div class="support-modal-title">Закрыть обращение</div>
     <div class="support-modal-label">Причина закрытия</div>
