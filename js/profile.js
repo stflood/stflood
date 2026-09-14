@@ -212,5 +212,4 @@ document.getElementById('editSave').addEventListener('click', saveEdit);
 document.getElementById('passCancel').addEventListener('click', function () { closeModalById('passModal'); });
 document.getElementById('passSave').addEventListener('click', savePass);
 
-initAuth();
-renderProfilePage();
+initAuth().then(function () { renderProfilePage(); });

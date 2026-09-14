@@ -355,5 +355,4 @@ var supRegBtn = document.getElementById('supRegBtn');
 if (supLoginBtn) supLoginBtn.addEventListener('click', function () { openAuthModal('login'); });
 if (supRegBtn) supRegBtn.addEventListener('click', function () { openAuthModal('reg'); });
 
-initAuth();
-loadFeed();
+initAuth().then(function () { loadFeed(); });
