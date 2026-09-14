@@ -80,10 +80,13 @@ async function refreshNotifBadge() {
   var el = byId('notifCount');
   if (!el) return;
   if (!currentUser || !isStaff(currentUser.role) || !initSupabase()) return;
+  var total = 0;
   var res = await SB.from('requests').select('id').eq('status', 'open');
-  var n = (res.data && !res.error) ? res.data.length : 0;
-  el.textContent = n;
-  el.style.display = n > 0 ? 'block' : 'none';
+  if (res.data && !res.error) total += res.data.length;
+  var ach = await SB.from('achievements').select('id').eq('status', 'pending');
+  if (ach.data && !ach.error) total += ach.data.length;
+  el.textContent = total;
+  el.style.display = total > 0 ? 'block' : 'none';
 }
 
 function notifyNewRequest() {
@@ -106,6 +109,34 @@ function notifyNewRequest() {
     document.body.appendChild(t);
   }
   t.innerHTML = '🔔 Новое обращение в техподдержке';
+  t.style.display = 'block';
+  clearTimeout(window.__notifToastT);
+  window.__notifToastT = setTimeout(function () {
+    var el = byId('toastNotif');
+    if (el) el.style.display = 'none';
+  }, 5000);
+}
+
+function notifyNewAchievement() {
+  if (!currentUser || !isStaff(currentUser.role)) return;
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try {
+      new Notification('Достижение на проверке', {
+        body: 'Кто-то подал достижение — зайди и проверь.',
+        icon: 'img/avatar.jpg'
+      });
+    } catch (e) { /* noop */ }
+    return;
+  }
+  if (typeof document.hidden !== 'undefined' && document.hidden) return;
+  var t = byId('toastNotif');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toastNotif';
+    t.className = 'toast-notif';
+    document.body.appendChild(t);
+  }
+  t.innerHTML = '🏆 Новое достижение на проверке';
   t.style.display = 'block';
   clearTimeout(window.__notifToastT);
   window.__notifToastT = setTimeout(function () {
@@ -349,6 +380,11 @@ function subscribeRealtime() {
       if (typeof loadFeed === 'function') loadFeed();
     })
     .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, function () { refreshPresence(); })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'achievements' }, function (p) {
+      refreshNotifBadge();
+      if (p && p.eventType === 'INSERT') notifyNewAchievement();
+      if (typeof loadAch === 'function') loadAch();
+    })
     .subscribe();
 }
 

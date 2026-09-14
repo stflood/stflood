@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Достижения — St. Flood</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <img class="header-avatar" src="img/avatar.jpg" alt="avatar">
+    <div class="header-title">･⁠⁠⁠⁠Ꮥ𐐆 𐔥ᥣ𐔖𐔖ᦔ ･</div>
+  </div>
+  <div class="header-center">Сайт флуда St. Flood</div>
+  <nav class="tabs">
+    <a href="index.html">Основное</a>
+    <a href="news.html">Новости</a>
+    <a href="links.html">Связи</a>
+    <a href="admins.html">Админы</a>
+    <a href="support.html">Тех. Поддержка</a>
+    <a class="active" href="achievements.html">Достижения</a>
+    <a href="users.html">Пользователи</a>
+  </nav>
+  <div class="header-right" id="hdrAuth"></div>
+</div>
+<div class="sep"></div>
+
+<div class="content">
+
+  <div class="ach-title">Уголок Достижений</div>
+  <div class="ach-desc">Хвастайся тем, чем гордишься — сначала пройдёт проверку, потом появится тут.</div>
+
+  <div class="ach-form-box" id="achForm" style="display:none">
+    <div class="ach-form-label">Чем хочешь похвастаться?</div>
+    <textarea id="achInput" rows="3" maxlength="300" placeholder="Напиши о своём достижении..."></textarea>
+    <div class="sup-close-error" id="achFormError" style="display:none"></div>
+    <button type="button" class="support-btn support-btn-primary" id="achSubmit">Отправить на проверку</button>
+  </div>
+
+  <div id="achStaffSection" style="display:none">
+    <div class="ach-subtitle">⚠ На проверке (<span id="achPendingCount">0</span>)</div>
+    <div id="achPending"></div>
+  </div>
+
+  <div id="achMyPending" style="display:none">
+    <div class="ach-subtitle">Мои на проверке</div>
+    <div id="achMyPendingList"></div>
+  </div>
+
+  <div class="ach-subtitle">Опубликованные</div>
+  <div id="achPublished"></div>
+
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/vendor/supabase.min.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/achievements.js"></script>
+</body>
+</html>
