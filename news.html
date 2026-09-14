@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Связи — St. Flood</title>
+<title>Новости — St. Flood</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -16,29 +16,28 @@
   <div class="header-center">Сайт флуда St. Flood</div>
   <nav class="tabs">
     <a href="index.html">Основное</a>
-    <a href="news.html">Новости</a>
-    <a class="active" href="links.html">Связи</a>
+    <a class="active" href="news.html">Новости</a>
+    <a href="links.html">Связи</a>
     <a href="admins.html">Админы</a>
     <a href="support.html">Тех. Поддержка</a>
-      <a href="users.html">Пользователи</a>
+    <a href="users.html">Пользователи</a>
   </nav>
   <div class="header-right" id="hdrAuth"></div>
 </div>
 <div class="sep"></div>
 
 <div class="content">
-
-  <div class="link-block">Связь</div>
-  <div class="link-card"><a href="https://t.me/+-tkmfqUG329kZDU6" target="_blank" rel="noopener">Наше инфо в Telegram</a></div>
-  <div class="link-card">Владелец: <a href="https://t.me/kimchirr" target="_blank" rel="noopener">@kimchirr</a></div>
-  <p class="link-note">По любым вопросам пишите владельцу/совладельцу: мы всегда на связи и рады новым знакомствам.</p>
-  <p class="link-note">Спасибо, что заглядываете! Мы ценим ваше присутствие.</p>
-
+  <div class="news-panel">
+    <div id="newsIndex"></div>
+    <div id="newsPost" style="display:none"></div>
+  </div>
 </div>
 
 <script src="js/config.js"></script>
 <script src="js/vendor/supabase.min.js"></script>
 <script src="js/auth.js"></script>
 <script>initAuth();</script>
+<script src="js/news-data.js"></script>
+<script src="js/news.js"></script>
 </body>
 </html>

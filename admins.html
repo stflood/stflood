@@ -16,10 +16,13 @@
   <div class="header-center">Сайт флуда St. Flood</div>
   <nav class="tabs">
     <a href="index.html">Основное</a>
+      <a href="news.html">Новости</a>
     <a href="links.html">Связи</a>
     <a class="active" href="admins.html">Админы</a>
     <a href="support.html">Тех. Поддержка</a>
+      <a href="users.html">Пользователи</a>
   </nav>
+  <div class="header-right" id="hdrAuth"></div>
 </div>
 <div class="sep"></div>
 
@@ -46,6 +49,7 @@
       <div class="admin-num">3.</div>
       <div class="admin-name">The Second Coming</div>
       <div class="admin-role">Ст. Админ</div>
+      <div class="admin-founder">Создатель сайта</div>
       <img src="img/second.png" alt="second.png">
     </div>
   </div>
@@ -68,5 +72,9 @@
 
 </div>
 
+<script src="js/config.js"></script>
+<script src="js/vendor/supabase.min.js"></script>
+<script src="js/auth.js"></script>
+<script>initAuth();</script>
 </body>
 </html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Профиль — St. Flood</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <img class="header-avatar" src="img/avatar.jpg" alt="avatar">
+    <div class="header-title">･⁠⁠⁠⁠Ꮥ𐐆 𐔥ᥣ𐔖𐔖ᦔ ･</div>
+  </div>
+  <div class="header-center">Сайт флуда St. Flood</div>
+  <nav class="tabs">
+    <a href="index.html">Основное</a>
+      <a href="news.html">Новости</a>
+    <a href="links.html">Связи</a>
+    <a href="admins.html">Админы</a>
+    <a href="support.html">Тех. Поддержка</a>
+      <a href="users.html">Пользователи</a>
+  </nav>
+  <div class="header-right" id="hdrAuth"></div>
+</div>
+<div class="sep"></div>
+<div class="content">
+
+  <div class="profile-panel">
+
+    <div class="profile-login-msg" id="profileLoginMsg" style="display:none">
+      <span>Войди, чтобы увидеть профиль.</span>
+      <button type="button" class="sup-btn-primary" id="plogin">Войти</button>
+    </div>
+
+    <div class="profile-cols" id="profileCols">
+      <div class="profile-left">
+        <div class="profile-avatar" id="profileAvatar"></div>
+        <div class="profile-nick" id="profileNick"></div>
+        <div class="profile-role" id="profileRole"></div>
+        <div class="profile-dates">
+          <div>Регистрация: <span id="profileCreated"></span></div>
+          <div>Был в сети: <span id="profileSeen"></span></div>
+        </div>
+        <div class="profile-actions">
+          <button type="button" class="hdr-btn" id="profileEdit">Редактировать</button>
+          <button type="button" class="hdr-btn" id="profileChangePass">Сменить пароль</button>
+        </div>
+      </div>
+
+      <div class="profile-right">
+        <div class="cap">О себе</div>
+        <div class="profile-description" id="profileDescription">Пока пусто...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="support-modal" id="editModal">
+    <div class="support-modal-box">
+      <div class="support-modal-title">Редактировать профиль</div>
+      <div class="support-modal-label">Фото с устройства</div>
+      <input id="editAvatarFile" type="file" accept="image/*" class="edit-file-input">
+      <div class="support-modal-label">Или выбери из галереи</div>
+      <div class="avatar-gallery" id="avatarGallery"></div>
+      <div class="support-modal-label">Ник</div>
+      <input id="editNick" type="text" autocomplete="off">
+      <div class="support-modal-label">Описание</div>
+      <textarea id="editDescription" placeholder="Расскажи о себе..." maxlength="300"></textarea>
+      <div class="sup-close-error" id="editError"></div>
+      <div class="support-modal-btns">
+        <button class="support-btn support-btn-ghost" id="editCancel">Отмена</button>
+        <button class="support-btn support-btn-primary" id="editSave">Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="support-modal" id="passModal">
+    <div class="support-modal-box">
+      <div class="support-modal-title">Сменить пароль</div>
+      <div class="support-modal-label">Старый пароль</div>
+      <input id="passOld" type="password" autocomplete="current-password">
+      <div class="support-modal-label">Новый пароль</div>
+      <input id="passNew" type="password" placeholder="Минимум 4 символа" autocomplete="new-password">
+      <div class="sup-close-error" id="passError"></div>
+      <div class="support-modal-btns">
+        <button class="support-btn support-btn-ghost" id="passCancel">Отмена</button>
+        <button class="support-btn support-btn-danger" id="passSave">Сменить</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/vendor/supabase.min.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/profile.js"></script>
+</body>
+</html>
