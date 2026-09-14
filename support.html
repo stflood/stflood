@@ -3,80 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Тех. Поддержка — St. Flood</title>
-<link rel="stylesheet" href="css/style.css">
+<title>Форум — St. Flood</title>
+<meta http-equiv="refresh" content="0; url=forum.html">
+<script>window.location.replace('forum.html');</script>
 </head>
-<body class="sup-page">
-
-<div class="header">
-  <div class="header-left">
-    <img class="header-avatar" src="img/avatar.jpg" alt="avatar">
-    <div class="header-title">･⁠⁠⁠⁠Ꮥ𐐆 𐔥ᥣ𐔖𐔖ᦔ ･</div>
-  </div>
-  <div class="header-center">Сайт флуда St. Flood</div>
-  <nav class="tabs">
-    <a href="index.html">Основное</a>
-      <a href="news.html">Новости</a>
-    <a href="links.html">Связи</a>
-    <a href="admins.html">Админы</a>
-    <a class="active" href="support.html">Тех. Поддержка</a>
-      <a href="users.html">Пользователи</a>
-  </nav>
-  <div class="header-right" id="hdrAuth"></div>
-</div>
-<div class="sep"></div>
-<div class="content">
-
-  <div class="support-center">
-
-    <div class="sup-head">
-      <div class="sup-head-title">Обращения</div>
-    </div>
-
-    <div class="sup-body">
-      <div class="sup-requests" id="supRequests"></div>
-
-      <div class="sup-chat-wrap" id="supChatWrap">
-        <div class="sup-feed" id="supFeed"></div>
-
-        <div class="support-empty" id="supEmpty">
-          <div id="supAuthPrompt">
-            <div class="sup-auth-prompt-title">Войди, чтобы писать сообщения</div>
-            <div class="sup-auth-prompt-btns">
-              <button type="button" class="sup-btn-primary" id="supLoginBtn">Войти</button>
-              <button type="button" class="sup-btn-register" id="supRegBtn">Регистрация</button>
-            </div>
-          </div>
-          <span id="supNoMessages">Пока нет обращений</span>
-        </div>
-
-        <div class="sup-dialog-input">
-          <input id="supDialogInput" type="text" placeholder="Введите текст..." autocomplete="off">
-          <button class="sup-send" id="supDialogSend" title="Отправить">↑</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-</div>
-
-<div class="support-modal" id="supCloseModal">
-  <div class="support-modal-box">
-    <div class="support-modal-title">Закрыть обращение</div>
-    <div class="support-modal-label">Причина закрытия</div>
-    <textarea id="supCloseReason" placeholder="Напишите, почему закрываете обращение..."></textarea>
-    <div class="sup-close-error" id="supCloseError">Напишите причину — пустое поле нельзя!</div>
-    <div class="support-modal-btns">
-      <button class="support-btn support-btn-ghost" id="supCloseCancel">Отмена</button>
-      <button class="support-btn support-btn-danger" id="supCloseConfirm">Закрыть</button>
-    </div>
-  </div>
-</div>
-
-<script src="js/config.js"></script>
-<script src="js/vendor/supabase.min.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/support.js"></script>
+<body>
+<p><a href="forum.html">Форум</a></p>
 </body>
 </html>

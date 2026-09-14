@@ -225,7 +225,7 @@ function renderHdrAuth() {
       ? '<a class="hdr-btn" href="admin.html">Админка</a>'
       : '';
     var bell = isStaff(currentUser.role)
-      ? '<a class="hdr-btn notif-bell" id="notifBell" href="support.html" title="Обращения в поддержке">' +
+      ? '<a class="hdr-btn notif-bell" id="notifBell" href="forum.html" title="Форум — ответы и обращения">' +
         '🔔<span class="notif-count" id="notifCount" style="display:none">0</span></a>'
       : '';
     var avatarEl = avatarHtml(currentUser.avatar, 28);
@@ -373,11 +373,13 @@ function subscribeRealtime() {
     .on('postgres_changes', { event: '*', schema: 'public', table: 'request_messages' }, function () {
       refreshNotifBadge();
       if (typeof loadFeed === 'function') loadFeed();
+      if (typeof loadForum === 'function') loadForum();
     })
     .on('postgres_changes', { event: '*', schema: 'public', table: 'requests' }, function (p) {
       refreshNotifBadge();
       if (p && p.eventType === 'INSERT') notifyNewRequest();
       if (typeof loadFeed === 'function') loadFeed();
+      if (typeof loadForum === 'function') loadForum();
     })
     .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, function () { refreshPresence(); })
     .on('postgres_changes', { event: '*', schema: 'public', table: 'achievements' }, function (p) {

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Форум — St. Flood</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <img class="header-avatar" src="img/avatar.jpg" alt="avatar">
+    <div class="header-title">･⁠⁠⁠⁠Ꮥ𐐆 𐔥ᥣ𐔖𐔖ᦔ ･</div>
+  </div>
+  <div class="header-center">Сайт флуда St. Flood</div>
+  <nav class="tabs">
+    <a href="index.html">Основное</a>
+    <a href="news.html">Новости</a>
+    <a href="links.html">Связи</a>
+    <a href="admins.html">Админы</a>
+    <a class="active" href="forum.html">Форум</a>
+    <a href="achievements.html">Достижения</a>
+    <a href="users.html">Пользователи</a>
+  </nav>
+  <div class="header-right" id="hdrAuth"></div>
+</div>
+<div class="sep"></div>
+
+<div class="content">
+
+  <div class="forum-title">Форум</div>
+  <div class="forum-desc">Опиши свою проблему или вопрос — тебе ответят. Автор тему закрыть не может: это решают только модераторы.</div>
+
+  <!-- ==== СПИСОК ТЕМ ==== -->
+  <div id="forumList">
+    <div class="forum-toolbar">
+      <input id="forumSearch" type="text" placeholder="Поиск по темам..." autocomplete="off">
+      <button type="button" class="support-btn support-btn-primary" id="forumNewTopic">+ Новая тема</button>
+    </div>
+    <div id="forumTopics"></div>
+  </div>
+
+  <!-- ==== ТЕМА ==== -->
+  <div id="forumTopic" style="display:none">
+    <button type="button" class="hdr-btn" id="forumBack">&#8592; Назад</button>
+    <div class="forum-topic-view" id="forumTopicView"></div>
+  </div>
+
+</div>
+
+<!-- ==== МОДАЛКА НОВОЙ ТЕМЫ ==== -->
+<div class="support-modal" id="newTopicModal">
+  <div class="support-modal-box">
+    <div class="support-modal-title">Новая тема</div>
+    <div class="support-modal-label">Название</div>
+    <input id="ntTitle" type="text" maxlength="120" placeholder="О чём тема?">
+    <div class="support-modal-label">Суть проблемы или вопроса</div>
+    <div class="forum-editor">
+      <div class="forum-editor-toolbar" id="ntToolbar"></div>
+      <div class="forum-editor-area" id="ntBody" contenteditable="true" data-placeholder="Опиши подробно..."></div>
+    </div>
+    <input type="file" id="ntFile" accept="image/*" style="display:none">
+    <div class="sup-close-error" id="ntError" style="display:none"></div>
+    <div class="support-modal-btns">
+      <button class="support-btn support-btn-ghost" id="ntCancel">Отмена</button>
+      <button class="support-btn support-btn-primary" id="ntSubmit">Создать тему</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/vendor/supabase.min.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/forum.js"></script>
+</body>
+</html>
