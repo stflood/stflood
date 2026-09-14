@@ -1,66 +1,64 @@
-var LS_KEY = 'stflood_requests';
-var LS_LAST = 'stflood_last_seen';
 var closeTargetId = null;
-
-function touchPresence() {
-  localStorage.setItem(LS_LAST, String(Date.now()));
-}
-
-function isOnline() {
-  var t = Number(localStorage.getItem(LS_LAST)) || 0;
-  return Date.now() - t < 60000;
-}
-
-setInterval(function () { touchPresence(); }, 10000);
-touchPresence();
-
-function applyStatus(node) {
-  var who = node.getAttribute('data-status');
-  var online = isOnline();
-  if (who === 'admin') online = true;
-  node.className = 'sup-msg-status ' + (online ? 'status-on' : 'status-off');
-  node.innerHTML = '<i class="dot"></i>' + (online ? 'Online' : 'Offline');
-}
-
-function refreshStatuses() {
-  var nodes = document.querySelectorAll('.sup-msg-status');
-  for (var i = 0; i < nodes.length; i++) applyStatus(nodes[i]);
-}
-
-setInterval(refreshStatuses, 5000);
-
-function getRequests() {
-  try {
-    return JSON.parse(localStorage.getItem(LS_KEY)) || [];
-  } catch (e) {
-    return [];
-  }
-}
-
-function saveRequests(list) {
-  localStorage.setItem(LS_KEY, JSON.stringify(list));
-}
 
 function fmtFull(t) {
   var d = new Date(t);
   return d.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
-function fmtDateOnly(t) {
-  var d = new Date(t);
-  return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+function onAuthChange() {
+  loadFeed();
 }
 
-function render() {
-  var list = getRequests();
+function showSetupHint() {
+  var feed = document.getElementById('supFeed');
+  feed.innerHTML = '';
+  var empty = document.getElementById('supEmpty');
+  empty.textContent = 'Настрой Supabase: создай проект на supabase.com, выполни supabase_setup.sql и вставь URL/ключ в js/config.js';
+  empty.style.display = 'block';
+}
+
+function applyStatus(node, online) {
+  node.className = 'sup-msg-status ' + (online ? 'status-on' : 'status-off');
+  node.innerHTML = '<i class="dot"></i>' + (online ? 'Online' : 'Offline');
+}
+
+function refreshStatuses() {
+  var nodes = document.querySelectorAll('.sup-msg-status');
+  for (var i = 0; i < nodes.length; i++) {
+    var uid = nodes[i].getAttribute('data-uid');
+    var p = presenceMap[uid];
+    var online = p ? p.online : true;
+    applyStatus(nodes[i], online);
+  }
+}
+
+setInterval(refreshStatuses, 5000);
+
+async function loadFeed() {
+  if (!initSupabase()) { showSetupHint(); return; }
+  subscribeRealtime();
+  var res = await SB.from('requests')
+    .select('id, created_at, status, closed_reason, closed_at, creator_id, request_messages(id, created_at, user_id, nick, text)')
+    .order('created_at', { ascending: true });
+  if (res.error) return;
+  var list = (res.data || []).map(function (r) {
+    r.messages = (r.request_messages || []).sort(function (a, b) {
+      return a.created_at.localeCompare(b.created_at);
+    });
+    return r;
+  });
+  await refreshPresence();
+  render(list);
+}
+
+function render(list) {
   var feed = document.getElementById('supFeed');
   feed.innerHTML = '';
 
-  if (!list.length) {
-    document.getElementById('supEmpty').style.display = 'block';
-  } else {
-    document.getElementById('supEmpty').style.display = 'none';
-  }
+  var empty = document.getElementById('supEmpty');
+  empty.style.display = list.length ? 'none' : 'block';
+
+  var nearBottom = feed.scrollHeight - feed.scrollTop - feed.clientHeight < 100;
 
   list.forEach(function (r) {
     var req = document.createElement('div');
@@ -69,23 +67,28 @@ function render() {
 
     var date = document.createElement('div');
     date.className = 'sup-req-date';
-    date.textContent = 'ОБРАЩЕНИЕ · ' + fmtFull(r.created);
+    date.textContent = 'ОБРАЩЕНИЕ · ' + fmtFull(r.created_at);
     req.appendChild(date);
 
     (r.messages || []).forEach(function (m) {
+      var isCreator = m.user_id === r.creator_id;
       var msg = document.createElement('div');
-      msg.className = 'sup-msg ' + (m.author === 'вопрос' ? 'msg-q' : 'msg-a');
+      msg.className = 'sup-msg ' + (isCreator ? 'msg-q' : 'msg-a');
 
       var meta = document.createElement('div');
       meta.className = 'sup-msg-meta';
       var tag = document.createElement('span');
       tag.className = 'sup-msg-tag';
-      tag.textContent = m.author === 'вопрос' ? 'Ник игрока' : 'Админ';
+      var p = presenceMap[m.user_id];
+      var tagText = m.nick || (p ? p.nick : (isCreator ? 'Ник игрока' : 'Пользователь'));
+      tag.textContent = tagText;
+      tag.title = tagText;
       var status = document.createElement('span');
       status.className = 'sup-msg-status';
-      status.setAttribute('data-status', m.author === 'вопрос' ? 'player' : 'admin');
-      applyStatus(status);
-      if (m.author === 'вопрос') {
+      status.setAttribute('data-uid', m.user_id || '');
+      var online = p ? p.online : true;
+      applyStatus(status, online);
+      if (isCreator) {
         meta.appendChild(status);
         meta.appendChild(tag);
       } else {
@@ -110,7 +113,7 @@ function render() {
       lbl.textContent = 'ЗАКРЫТО';
       var reason = document.createElement('div');
       reason.className = 'sup-closed-reason';
-      reason.textContent = r.closedReason || '(без причины)';
+      reason.textContent = r.closed_reason || '(без причины)';
       closed.appendChild(lbl);
       closed.appendChild(reason);
       req.appendChild(closed);
@@ -132,36 +135,40 @@ function render() {
     feed.appendChild(sep);
   });
 
-  feed.scrollTop = feed.scrollHeight;
+  if (nearBottom) feed.scrollTop = feed.scrollHeight;
 }
 
-function createRequest(text) {
-  var list = getRequests();
-  list.push({
-    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-    status: 'open',
-    created: Date.now(),
-    closedReason: '',
-    closedDate: null,
-    messages: [{ author: 'вопрос', text: text, date: Date.now() }]
-  });
-  saveRequests(list);
-}
-
-function sendDialog() {
+async function sendDialog() {
+  if (!initSupabase() || !currentUser) { openAuthModal('login'); return; }
   var input = document.getElementById('supDialogInput');
   var text = input.value.trim();
   if (!text) return;
-  var list = getRequests();
-  var last = list[list.length - 1];
-  if (last && last.status === 'open') {
-    last.messages.push({ author: 'ответ', text: text, date: Date.now() });
-    saveRequests(list);
-  } else {
-    createRequest(text);
+  await ensureProfile();
+
+  var openReq = null;
+  var res = await SB.from('requests')
+    .select('id')
+    .eq('status', 'open')
+    .order('created_at', { ascending: true });
+  if (!res.error && res.data && res.data.length) {
+    openReq = res.data[res.data.length - 1];
   }
+
+  if (!openReq) {
+    var ins = await SB.from('requests').insert({ status: 'open', creator_id: currentUser.id }).select().single();
+    if (ins.error) return;
+    openReq = ins.data;
+  }
+
+  await SB.from('request_messages').insert({
+    request_id: openReq.id,
+    user_id: currentUser.id,
+    nick: myNick,
+    text: text
+  });
+
   input.value = '';
-  render();
+  loadFeed();
 }
 
 function openCloseModal(id) {
@@ -171,26 +178,21 @@ function openCloseModal(id) {
   openModal('supCloseModal');
 }
 
-function submitClose() {
+async function submitClose() {
   var reason = document.getElementById('supCloseReason').value.trim();
   var err = document.getElementById('supCloseError');
   if (!reason) {
     err.style.display = 'block';
     return;
   }
-  var list = getRequests();
-  for (var i = 0; i < list.length; i++) {
-    if (list[i].id === closeTargetId) {
-      list[i].status = 'closed';
-      list[i].closedReason = reason;
-      list[i].closedDate = Date.now();
-      break;
-    }
-  }
-  saveRequests(list);
+  await SB.from('requests').update({
+    status: 'closed',
+    closed_reason: reason,
+    closed_at: new Date().toISOString()
+  }).eq('id', closeTargetId);
   closeTargetId = null;
   closeModal('supCloseModal');
-  render();
+  loadFeed();
 }
 
 function openModal(id) {
@@ -210,4 +212,10 @@ document.getElementById('supCloseCancel').addEventListener('click', function () 
 });
 document.getElementById('supCloseConfirm').addEventListener('click', submitClose);
 
-render();
+document.getElementById('authTabLogin').addEventListener('click', function () { switchAuthMode('login'); });
+document.getElementById('authTabReg').addEventListener('click', function () { switchAuthMode('reg'); });
+document.getElementById('authSubmit').addEventListener('click', submitAuth);
+document.getElementById('authCancel').addEventListener('click', closeAuthModal);
+
+initAuth();
+loadFeed();

@@ -1,0 +1,2 @@
+var SUPABASE_URL = "";
+var SUPABASE_ANON_KEY = "";

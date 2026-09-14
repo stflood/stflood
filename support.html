@@ -28,6 +28,7 @@
 
     <div class="sup-head">
       <div class="sup-head-title">Обращения</div>
+      <div class="sup-auth" id="supAuth"></div>
     </div>
 
     <div class="sup-feed" id="supFeed"></div>
@@ -41,6 +42,7 @@
   </div>
 
 </div>
+
 <div class="support-modal" id="supCloseModal">
   <div class="support-modal-box">
     <div class="support-modal-title">Закрыть обращение</div>
@@ -54,6 +56,30 @@
   </div>
 </div>
 
+<div class="support-modal" id="authModal">
+  <div class="support-modal-box">
+    <div class="support-modal-title" id="authTitle">Вход</div>
+    <div class="auth-switch">
+      <button type="button" class="auth-switch-btn auth-switch-active" id="authTabLogin">Вход</button>
+      <button type="button" class="auth-switch-btn" id="authTabReg">Регистрация</button>
+    </div>
+    <div class="support-modal-label" id="authLabelNick" style="display:none">Ник</div>
+    <input id="authNickInput" type="text" placeholder="Ваш ник" autocomplete="off" style="display:none">
+    <div class="support-modal-label">E-mail</div>
+    <input id="authEmailInput" type="email" placeholder="email@example.com" autocomplete="email">
+    <div class="support-modal-label">Пароль</div>
+    <input id="authPassInput" type="password" placeholder="Минимум 6 символов" autocomplete="current-password">
+    <div class="sup-close-error" id="authError"></div>
+    <div class="support-modal-btns">
+      <button class="support-btn support-btn-ghost" id="authCancel">Отмена</button>
+      <button class="support-btn support-btn-primary" id="authSubmit">Войти</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
 <script src="js/support.js"></script>
 </body>
 </html>
