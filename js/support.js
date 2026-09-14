@@ -1,5 +1,33 @@
 var LS_KEY = 'stflood_requests';
+var LS_LAST = 'stflood_last_seen';
 var closeTargetId = null;
+
+function touchPresence() {
+  localStorage.setItem(LS_LAST, String(Date.now()));
+}
+
+function isOnline() {
+  var t = Number(localStorage.getItem(LS_LAST)) || 0;
+  return Date.now() - t < 60000;
+}
+
+setInterval(function () { touchPresence(); }, 10000);
+touchPresence();
+
+function applyStatus(node) {
+  var who = node.getAttribute('data-status');
+  var online = isOnline();
+  if (who === 'admin') online = true;
+  node.className = 'sup-msg-status ' + (online ? 'status-on' : 'status-off');
+  node.innerHTML = '<i class="dot"></i>' + (online ? 'Online' : 'Offline');
+}
+
+function refreshStatuses() {
+  var nodes = document.querySelectorAll('.sup-msg-status');
+  for (var i = 0; i < nodes.length; i++) applyStatus(nodes[i]);
+}
+
+setInterval(refreshStatuses, 5000);
 
 function getRequests() {
   try {
@@ -54,8 +82,9 @@ function render() {
       tag.className = 'sup-msg-tag';
       tag.textContent = m.author === 'вопрос' ? 'Ник игрока' : 'Админ';
       var status = document.createElement('span');
-      status.className = 'sup-msg-status ' + (m.author === 'вопрос' ? 'status-off' : 'status-on');
-      status.innerHTML = '<i class="dot"></i>' + (m.author === 'вопрос' ? 'Offline' : 'Online');
+      status.className = 'sup-msg-status';
+      status.setAttribute('data-status', m.author === 'вопрос' ? 'player' : 'admin');
+      applyStatus(status);
       if (m.author === 'вопрос') {
         meta.appendChild(status);
         meta.appendChild(tag);

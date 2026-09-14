@@ -268,6 +268,36 @@ body {
 }
 
 /* ─── support ─── */
+body.sup-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+body.sup-page .content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 24px 14px;
+}
+body.sup-page .support-center {
+  flex: 1;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+body.sup-page .sup-feed {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+  overflow-y: auto;
+  padding-bottom: 8px;
+}
+body.sup-page .sup-dialog-input {
+  flex-shrink: 0;
+}
 .support-center {
   max-width: 640px;
   margin: 20px auto;
@@ -295,6 +325,22 @@ body {
   padding: 16px 16px 10px;
   max-height: 52vh;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #5c4c2e #0a0a0c;
+}
+.sup-feed::-webkit-scrollbar {
+  width: 8px;
+}
+.sup-feed::-webkit-scrollbar-track {
+  background: #0a0a0c;
+  border-left: 1px solid #2c2925;
+}
+.sup-feed::-webkit-scrollbar-thumb {
+  background: #5c4c2e;
+  border-radius: 4px;
+}
+.sup-feed::-webkit-scrollbar-thumb:hover {
+  background: #7a6440;
 }
 .support-empty {
   color: #8a8168;
@@ -606,7 +652,8 @@ body {
   .cap { font-size: 24px; }
   .admins-row { flex-direction: column; align-items: center; }
   .admin { flex: 0 1 300px; width: 90vw; }
-  .support-center { margin: 12px auto; }
+  .support-center { margin: 0 auto; }
+  body.sup-page .content { padding: 10px 12px 12px; }
   .support-modal-box { width: 100vw; max-width: 100vw; height: 100vh; border: none; border-top: 1px solid #4a3f2e; box-sizing: border-box; padding: 18px; display: flex; flex-direction: column; }
   .support-modal-btns { flex-shrink: 0; }
   .sup-feed { max-height: none; }
