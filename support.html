@@ -25,9 +25,53 @@
 
 <div class="content">
 
-  <div class="empty">Тех. Поддержка — скоро</div>
+  <div class="support-wrap">
+
+    <div class="support-main">
+      <h2>Тех. Поддержка</h2>
+      <p>Здесь можно сообщить о проблеме или баге. Нажмите «+», создайте обращение — и оно появится в списке справа.</p>
+    </div>
+
+    <aside class="support-side">
+      <div class="support-side-head">
+        <div class="support-side-title">Обращения</div>
+        <button class="support-add" id="supAdd" title="Новое обращение">+</button>
+      </div>
+      <ul class="support-list" id="supList"></ul>
+      <div class="support-empty" id="supEmpty">Пока нет обращений</div>
+    </aside>
+
+  </div>
 
 </div>
 
+<div class="support-modal" id="supCreateModal">
+  <div class="support-modal-box">
+    <div class="support-modal-title">Новое обращение</div>
+    <div class="support-modal-label">Тема / вопрос</div>
+    <input id="supInputTitle" type="text" placeholder="Кратко опишите проблему">
+    <div class="support-modal-label">Описание</div>
+    <textarea id="supInputText" placeholder="Подробно опишите проблему или баг..."></textarea>
+    <div class="support-modal-btns">
+      <button class="support-btn support-btn-ghost" id="supCancel">Отмена</button>
+      <button class="support-btn support-btn-primary" id="supSave">Отправить</button>
+    </div>
+  </div>
+</div>
+
+<div class="support-modal" id="supViewModal">
+  <div class="support-modal-box">
+    <input type="hidden" id="supViewId">
+    <div class="support-modal-title" id="supViewTitle">Обращение</div>
+    <div class="support-view-date" id="supViewDate"></div>
+    <div class="support-view-text" id="supViewText"></div>
+    <div class="support-modal-btns">
+      <button class="support-btn support-btn-danger" id="supViewDelete">Удалить</button>
+      <button class="support-btn support-btn-primary" id="supViewClose">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/support.js"></script>
 </body>
 </html>
