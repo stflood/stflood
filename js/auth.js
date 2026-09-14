@@ -75,6 +75,54 @@ function canManageUsers(role) {
   return role === 'co-owner' || role === 'owner' || role === 'creator';
 }
 
+/* ─── notification bell ─── */
+async function refreshNotifBadge() {
+  var el = byId('notifCount');
+  if (!el) return;
+  if (!currentUser || !isStaff(currentUser.role) || !initSupabase()) return;
+  var res = await SB.from('requests').select('id').eq('status', 'open');
+  var n = (res.data && !res.error) ? res.data.length : 0;
+  el.textContent = n;
+  el.style.display = n > 0 ? 'block' : 'none';
+}
+
+function notifyNewRequest() {
+  if (!currentUser || !isStaff(currentUser.role)) return;
+  if ('Notification' in window && Notification.permission === 'granted') {
+    try {
+      new Notification('Новое обращение в техподдержке', {
+        body: 'Кто-то написал на сайте — зайди и ответь.',
+        icon: 'img/avatar.jpg'
+      });
+    } catch (e) { /* noop */ }
+    return;
+  }
+  if (typeof document.hidden !== 'undefined' && document.hidden) return;
+  var t = byId('toastNotif');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toastNotif';
+    t.className = 'toast-notif';
+    document.body.appendChild(t);
+  }
+  t.innerHTML = '🔔 Новое обращение в техподдержке';
+  t.style.display = 'block';
+  clearTimeout(window.__notifToastT);
+  window.__notifToastT = setTimeout(function () {
+    var el = byId('toastNotif');
+    if (el) el.style.display = 'none';
+  }, 5000);
+}
+
+function ensureNotifPermission() {
+  if (!currentUser || !isStaff(currentUser.role)) return;
+  if ('Notification' in window && Notification.permission === 'default') {
+    try {
+      Notification.requestPermission();
+    } catch (e) { /* noop */ }
+  }
+}
+
 /* ─── session ─── */
 function saveSession() {
   if (!currentUser) return;
@@ -145,10 +193,15 @@ function renderHdrAuth() {
     var adminLink = isStaff(currentUser.role)
       ? '<a class="hdr-btn" href="admin.html">Админка</a>'
       : '';
+    var bell = isStaff(currentUser.role)
+      ? '<a class="hdr-btn notif-bell" id="notifBell" href="support.html" title="Обращения в поддержке">' +
+        '🔔<span class="notif-count" id="notifCount" style="display:none">0</span></a>'
+      : '';
     var avatarEl = avatarHtml(currentUser.avatar, 28);
     box.innerHTML =
       '<a class="hdr-avatar-link" href="profile.html">' + avatarEl + '</a>' +
       '<a class="hdr-nick-link" href="profile.html"><span class="hdr-nick" title="' + esc(currentUser.nick) + '">' + esc(currentUser.nick) + '</span></a>' +
+      bell +
       adminLink +
       '<button type="button" class="hdr-btn" id="hdrLogout">Выйти</button>';
     var lo = byId('hdrLogout');
@@ -286,8 +339,15 @@ function subscribeRealtime() {
   if (!SB || realtimeSubscribed) return;
   realtimeSubscribed = true;
   SB.channel('support-feed')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'request_messages' }, function () { if (typeof loadFeed === 'function') loadFeed(); })
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'requests' }, function () { if (typeof loadFeed === 'function') loadFeed(); })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'request_messages' }, function () {
+      refreshNotifBadge();
+      if (typeof loadFeed === 'function') loadFeed();
+    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'requests' }, function (p) {
+      refreshNotifBadge();
+      if (p && p.eventType === 'INSERT') notifyNewRequest();
+      if (typeof loadFeed === 'function') loadFeed();
+    })
     .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, function () { refreshPresence(); })
     .subscribe();
 }
@@ -351,6 +411,8 @@ async function initAuth() {
   renderMustChangeBanner();
   refreshPresence();
   subscribeRealtime();
+  refreshNotifBadge();
+  ensureNotifPermission();
   if (typeof onAuthChange === 'function') onAuthChange();
 }
 

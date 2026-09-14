@@ -53,6 +53,7 @@ async function loadFeed() {
     return;
   }
   isAdmin = isStaff(currentUser.role);
+  refreshNotifBadge();
   subscribeRealtime();
   await refreshPresence();
   await loadRequests();
