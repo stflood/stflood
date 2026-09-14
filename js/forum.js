@@ -98,7 +98,8 @@ function fmtForumTime(t) {
 }
 
 function forumAuthor(topic) {
-  var u = topic.creator && topic.creator.length ? topic.creator[0] : null;
+  var u = topic.creator;
+  if (Array.isArray(u)) u = u[0];
   if (!u) return { nick: 'Игрок', avatar: '', role: 'user' };
   return { nick: u.nick, avatar: u.avatar, role: u.role };
 }
@@ -212,10 +213,13 @@ function renderTopic() {
 
   var out = document.createElement('div');
   out.innerHTML = html;
-  out.querySelector('[data-fact="status"]').addEventListener('click', function () {
-    setTopicStatus(out.querySelector('#fStatusSel').value);
+  var stBtn = out.querySelector('[data-fact="status"]');
+  if (stBtn) stBtn.addEventListener('click', function () {
+    var sel = out.querySelector('#fStatusSel');
+    setTopicStatus(sel ? sel.value : 'open');
   });
-  out.querySelector('[data-fact="pin"]').addEventListener('click', function () {
+  var pinBtn = out.querySelector('[data-fact="pin"]');
+  if (pinBtn) pinBtn.addEventListener('click', function () {
     toggleTopicPin(!t.pinned);
   });
 
