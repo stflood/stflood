@@ -71,6 +71,10 @@ function isStaff(role) {
   return role === 'admin' || role === 'co-owner' || role === 'owner' || role === 'creator';
 }
 
+function canManageUsers(role) {
+  return role === 'co-owner' || role === 'owner' || role === 'creator';
+}
+
 /* ─── session ─── */
 function saveSession() {
   if (!currentUser) return;

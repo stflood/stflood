@@ -96,17 +96,19 @@ function showUserActions(id) {
         '</div>' +
       '</div>' +
       '<div class="admin-user-actions">' +
-        '<button type="button" class="sup-btn-danger" data-act="del" data-id="' + u.id + '">Удалить</button>' +
-        '<button type="button" class="support-btn" data-act="block" data-id="' + u.id + '">' +
-          (u.blocked ? 'Разблокировать' : 'Заблокировать') + '</button>' +
-        (u.id !== currentUser.id
-          ? '<span class="adm-role-box">Роль: ' +
-            '<select class="adm-role-select" id="roleSel">' + roleOptions(u.role) + '</select>' +
-            '<button type="button" class="support-btn" data-act="setrole" data-id="' + u.id + '">Применить</button>' +
-            '</span>'
+        (canManageUsers(currentUser.role)
+          ? '<button type="button" class="sup-btn-danger" data-act="del" data-id="' + u.id + '">Удалить</button>' +
+            '<button type="button" class="support-btn" data-act="block" data-id="' + u.id + '">' +
+            (u.blocked ? 'Разблокировать' : 'Заблокировать') + '</button>' +
+            (u.id !== currentUser.id
+              ? '<span class="adm-role-box">Роль: ' +
+                '<select class="adm-role-select" id="roleSel">' + roleOptions(u.role) + '</select>' +
+                '<button type="button" class="support-btn" data-act="setrole" data-id="' + u.id + '">Применить</button>' +
+                '</span>'
+              : '') +
+            '<button type="button" class="support-btn" data-act="fnick" data-id="' + u.id + '">' +
+            (u.must_change_nick ? 'Отменить смену ника' : 'Отправить на смену ника') + '</button>'
           : '') +
-        '<button type="button" class="support-btn" data-act="fnick" data-id="' + u.id + '">' +
-          (u.must_change_nick ? 'Отменить смену ника' : 'Отправить на смену ника') + '</button>' +
         '<a class="hdr-btn" href="profile.html?nick=' + encodeURIComponent(u.nick) + '">Открыть профиль</a>' +
       '</div>' +
     '</div>';
