@@ -4,5 +4,4 @@
 -- Осторожно: это действие необратимо.
 -- ============================================================
 
-truncate table public.request_messages;
-truncate table public.requests; -- сброс счётчика id тоже произойдёт
+truncate table public.requests, public.request_messages cascade;
