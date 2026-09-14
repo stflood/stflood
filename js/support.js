@@ -39,43 +39,46 @@ function render() {
     req.className = 'sup-req';
     if (r.status === 'closed') req.classList.add('closed');
 
-    var head = document.createElement('div');
-    head.className = 'sup-req-head';
     var date = document.createElement('div');
     date.className = 'sup-req-date';
-    date.textContent = 'Обращение · ' + fmtFull(r.created);
-    var badge = document.createElement('span');
-    badge.className = r.status === 'closed' ? 'sup-req-badge badge-closed' : 'sup-req-badge badge-open';
-    badge.textContent = r.status === 'closed' ? 'Закрыто' : 'Открыто';
-    head.appendChild(date);
-    head.appendChild(badge);
-    req.appendChild(head);
+    date.textContent = 'ОБРАЩЕНИЕ · ' + fmtFull(r.created);
+    req.appendChild(date);
 
     (r.messages || []).forEach(function (m) {
+      var msg = document.createElement('div');
+      msg.className = 'sup-msg ' + (m.author === 'вопрос' ? 'msg-q' : 'msg-a');
+
+      var meta = document.createElement('div');
+      meta.className = 'sup-msg-meta';
+      var tag = document.createElement('span');
+      tag.className = 'sup-msg-tag';
+      tag.textContent = m.author === 'вопрос' ? 'Ник игрока' : 'Админ';
+      var status = document.createElement('span');
+      status.className = 'sup-msg-status ' + (m.author === 'вопрос' ? 'status-off' : 'status-on');
+      status.innerHTML = '<i class="dot"></i>' + (m.author === 'вопрос' ? 'Offline' : 'Online');
+      if (m.author === 'вопрос') {
+        meta.appendChild(status);
+        meta.appendChild(tag);
+      } else {
+        meta.appendChild(tag);
+        meta.appendChild(status);
+      }
+      msg.appendChild(meta);
+
       var bubble = document.createElement('div');
-      bubble.className = 'sup-msg ' + (m.author === 'вопрос' ? 'msg-q' : 'msg-a');
-      var who = document.createElement('div');
-      who.className = 'sup-msg-who';
-      who.textContent = m.author === 'вопрос' ? 'Вопрос' : 'Ответ';
-      var text = document.createElement('div');
-      text.className = 'sup-msg-text';
-      text.textContent = m.text || '(пусто)';
-      var md = document.createElement('div');
-      md.className = 'sup-msg-date';
-      md.textContent = fmtFull(m.date);
-      bubble.appendChild(who);
-      bubble.appendChild(text);
-      bubble.appendChild(md);
-      req.appendChild(bubble);
+      bubble.className = 'sup-msg-bubble';
+      bubble.textContent = m.text || '(пусто)';
+      msg.appendChild(bubble);
+
+      req.appendChild(msg);
     });
 
     if (r.status === 'closed') {
       var closed = document.createElement('div');
       closed.className = 'sup-req-closed';
-      closed.innerHTML = '';
       var lbl = document.createElement('div');
       lbl.className = 'sup-closed-label';
-      lbl.textContent = 'Закрыто';
+      lbl.textContent = 'ЗАКРЫТО';
       var reason = document.createElement('div');
       reason.className = 'sup-closed-reason';
       reason.textContent = r.closedReason || '(без причины)';
@@ -83,11 +86,14 @@ function render() {
       closed.appendChild(reason);
       req.appendChild(closed);
     } else {
+      var actions = document.createElement('div');
+      actions.className = 'sup-req-actions';
       var btn = document.createElement('button');
       btn.className = 'sup-btn-danger';
-      btn.textContent = 'Закрыть обращение';
+      btn.textContent = 'ЗАКРЫТЬ ОБРАЩЕНИЕ';
       btn.addEventListener('click', function () { openCloseModal(r.id); });
-      req.appendChild(btn);
+      actions.appendChild(btn);
+      req.appendChild(actions);
     }
 
     feed.appendChild(req);

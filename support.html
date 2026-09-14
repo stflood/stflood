@@ -22,10 +22,10 @@
   </nav>
 </div>
 <div class="sep"></div>
-
 <div class="content">
 
   <div class="support-center">
+
     <div class="sup-head">
       <div class="sup-head-title">Обращения</div>
     </div>
@@ -34,28 +34,14 @@
     <div class="support-empty" id="supEmpty">Пока нет обращений</div>
 
     <div class="sup-dialog-input">
-      <input id="supDialogInput" type="text" placeholder="Напишите сообщение (Enter = отправить)...">
-      <button class="sup-send" id="supDialogSend">Отправить</button>
+      <input id="supDialogInput" type="text" placeholder="Введите текст..." autocomplete="off">
+      <button class="sup-send" id="supDialogSend" title="Отправить">↑</button>
     </div>
+
   </div>
 
 </div>
-
 <div class="support-modal" id="supCloseModal">
-  <div class="support-modal-box">
-    <div class="support-modal-title">Закрыть обращение</div>
-    <div class="support-modal-label">Причина закрытия</div>
-    <textarea id="supCloseReason" placeholder="Напишите, почему закрываете обращение..."></textarea>
-    <div class="sup-close-error" id="supCloseError">Напишите причину — пустое поле нельзя!</div>
-    <div class="support-modal-btns">
-      <button class="support-btn support-btn-ghost" id="supCloseCancel">Отмена</button>
-      <button class="support-btn support-btn-danger" id="supCloseConfirm">Закрыть</button>
-    </div>
-  </div>
-</div>
-
-<script src="js/support.js"></script>
-</body>
   <div class="support-modal-box">
     <div class="support-modal-title">Закрыть обращение</div>
     <div class="support-modal-label">Причина закрытия</div>
