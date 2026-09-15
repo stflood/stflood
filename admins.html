@@ -8,24 +8,36 @@
 </head>
 <body>
 
-<div class="header">
+
+<header class="header">
   <div class="header-left">
+    <button type="button" class="menu-toggle" id="menuToggle" title="Открыть меню">☰</button>
     <img class="header-avatar" src="img/avatar.jpg" alt="avatar">
-    <div class="header-title">･⁠⁠⁠⁠Ꮥ𐐆 𐔥ᥣ𐔖𐔖ᦔ ･</div>
+    <div class="header-title">St. Flood</div>
   </div>
   <div class="header-center">Сайт флуда St. Flood</div>
-  <nav class="tabs">
-    <a href="index.html">Основное</a>
-      <a href="news.html">Новости</a>
-    <a href="links.html">Связи</a>
-    <a class="active" href="admins.html">Админы</a>
-    <a href="support.html">Тех. Поддержка</a>
-    <a href="achievements.html">Достижения</a>
-      <a href="users.html">Пользователи</a>
-  </nav>
   <div class="header-right" id="hdrAuth"></div>
-</div>
+</header>
 <div class="sep"></div>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<nav class="sidebar" id="sidebar">
+  <button type="button" class="sidebar-close" id="sidebarClose" title="Закрыть меню">✕</button>
+  <div class="sidebar-logo">St. Flood</div>
+  <div class="sidebar-center">Навигация</div>
+  <div class="tabs">
+    <a href='index.html'><span class='ico'>🏠</span>Основное</a>
+    <a href='news.html'><span class='ico'>📢</span>Новости</a>
+    <a href='links.html'><span class='ico'>🔗</span>Связи</a>
+    <a href='admins.html' class="active"><span class='ico'>👑</span>Админы</a>
+    <a href='support.html'><span class='ico'>🛠️</span>Тех. Поддержка</a>
+    <a href='achievements.html'><span class='ico'>🏆</span>Достижения</a>
+    <a href='users.html'><span class='ico'>👥</span>Пользователи</a>
+  </div>
+  <div class="sidebar-user" id="sidebarUser"></div>
+
+</nav>
+
 
 <div class="content">
 
@@ -77,5 +89,44 @@
 <script src="js/vendor/supabase.min.js"></script>
 <script src="js/auth.js"></script>
 <script>initAuth();</script>
+
+<script>
+/* ─── открытие/закрытие меню (только телефон) ─── */
+var sidebar = document.getElementById('sidebar');
+var backdrop = document.getElementById('sidebarBackdrop');
+var isMobile = function () { return window.innerWidth <= 900; };
+function openMenu() {
+  if (!isMobile()) return;
+  document.body.classList.remove('menu-close');
+  document.body.classList.add('menu-open');
+  if (sidebar) sidebar.classList.remove('closed');
+}
+function closeMenu() {
+  if (!isMobile()) return;
+  document.body.classList.remove('menu-open');
+  document.body.classList.add('menu-close');
+  if (sidebar) sidebar.classList.add('closed');
+}
+var mt = document.getElementById('menuToggle');
+if (mt) mt.addEventListener('click', function () {
+  if (!isMobile()) return;
+  var open = document.body.classList.contains('menu-open');
+  if (open) { closeMenu(); } else { openMenu(); }
+});
+var sc = document.getElementById('sidebarClose');
+if (sc) sc.addEventListener('click', closeMenu);
+if (backdrop) backdrop.addEventListener('click', closeMenu);
+var sa = document.querySelectorAll('.sidebar .tabs a');
+for (var si = 0; si < sa.length; si++) {
+  sa[si].addEventListener('click', function () { if (isMobile()) closeMenu(); });
+}
+window.addEventListener('resize', function () {
+  if (!isMobile()) {
+    document.body.classList.remove('menu-open', 'menu-close');
+    if (sidebar) sidebar.classList.remove('closed');
+  }
+});
+</script>
 </body>
 </html>
+

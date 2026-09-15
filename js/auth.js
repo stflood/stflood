@@ -182,6 +182,7 @@ function clearSession() {
 
 async function applyAuthState() {
   renderHdrAuth();
+  renderSidebarUser();
   renderMustChangeBanner();
   if (typeof onAuthChange === 'function') onAuthChange();
 }
@@ -220,26 +221,60 @@ function renderHdrAuth() {
     var rb = byId('hdrReg');
     if (lb) lb.onclick = function () { openAuthModal('login'); };
     if (rb) rb.onclick = function () { openAuthModal('reg'); };
-  } else {
-    var adminLink = isStaff(currentUser.role)
-      ? '<a class="hdr-btn" href="admin.html">Админка</a>'
-      : '';
+} else {
     var bell = isStaff(currentUser.role)
-      ? '<a class="hdr-btn notif-bell" id="notifBell" href="support.html" title="Обращения в поддержке">' +
+      ? '<a class="hdr-btn notif-bell" id="notifBell" href="support.html" title="Уведомления о поддержке">' +
         '🔔<span class="notif-count" id="notifCount" style="display:none">0</span></a>'
       : '';
-    var avatarEl = avatarHtml(currentUser.avatar, 28);
-    box.innerHTML =
-      '<a class="hdr-avatar-link" href="profile.html">' + avatarEl + '</a>' +
-      '<a class="hdr-nick-link" href="profile.html"><span class="hdr-nick" title="' + esc(currentUser.nick) + '">' + esc(currentUser.nick) + '</span></a>' +
-      bell +
-      adminLink +
-      '<button type="button" class="hdr-btn" id="hdrLogout">Выйти</button>';
-    var lo = byId('hdrLogout');
-    if (lo) lo.onclick = function () { logout(); };
+    box.innerHTML = bell;
   }
 }
 
+
+/* ─── sidebar user block ─── */
+function renderSidebarUser() {
+  var box = byId('sidebarUser');
+  if (!box) return;
+if (!currentUser) {
+    box.innerHTML =
+      '<div class="sidebar-user-top">' +
+        '<div class="sidebar-user-ava">' +
+          '<div class="hdr-avatar-circle" style="width:36px;height:36px;font-size:18px;background:var(--grad-btn)">?</div>' +
+        '</div>' +
+        '<div class="sidebar-user-info">' +
+          '<div class="su-name">Гость</div>' +
+          '<div class="su-role">не в сети</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="su-links">' +
+        '<button type="button" class="su-btn" id="suLogin">Войти</button>' +
+        '<button type="button" class="su-btn su-btn-prim" id="suReg">Регистрация</button>' +
+      '</div>';
+    var lb = byId('suLogin');
+    var rb = byId('suReg');
+    if (lb) lb.onclick = function () { openAuthModal('login'); };
+    if (rb) rb.onclick = function () { openAuthModal('reg'); };
+return;
+  }
+  var avatarEl = avatarHtml(currentUser.avatar, 36);
+  var adminLink = isStaff(currentUser.role)
+    ? '<a class="su-btn" href="admin.html">Админка</a>'
+    : '';
+  box.innerHTML =
+    '<div class="sidebar-user-top">' +
+      '<div class="sidebar-user-ava">' + avatarEl + '</div>' +
+      '<div class="sidebar-user-info">' +
+        '<a class="su-nick" href="profile.html" title="Открыть профиль">' + esc(currentUser.nick) + '</a>' +
+        '<div class="su-role">' + roleLabel(currentUser.role) + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="su-links">' +
+      adminLink +
+      '<button type="button" class="su-btn su-btn-danger" id="suLogout">Выйти</button>' +
+    '</div>';
+  var lo = byId('suLogout');
+  if (lo) lo.onclick = function () { logout(); };
+}
 /* ─── auth modal ─── */
 function buildModals() {
   if (byId('authModal')) return;
@@ -385,6 +420,9 @@ function subscribeRealtime() {
       if (p && p.eventType === 'INSERT') notifyNewAchievement();
       if (typeof loadAch === 'function') loadAch();
     })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'news' }, function () {
+      if (typeof loadNews === 'function') loadNews();
+    })
     .subscribe();
 }
 
@@ -444,6 +482,7 @@ async function initAuth() {
     }
   }
   renderHdrAuth();
+  renderSidebarUser();
   renderMustChangeBanner();
   refreshPresence();
   subscribeRealtime();
