@@ -165,8 +165,11 @@ async function submitAch() {
 
   var res = await rpc('submit_achievement', { p_token: currentUser.token, p_text: text, p_image: imageUrl });
   var d = res.data;
+  console.log('submit_achievement result:', JSON.stringify(res));
   if (res.error || (d && d.error)) {
-    err.textContent = d && d.error ? d.error : 'Ошибка';
+    var msg = d && d.error ? d.error : (res.error && res.error.message ? res.error.message : 'Ошибка');
+    console.error('submit_achievement error:', msg, 'full:', JSON.stringify(res));
+    err.textContent = msg;
     err.style.display = 'block';
     return;
   }
