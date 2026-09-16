@@ -289,7 +289,7 @@ body.menu-open .sidebar { transform: translateX(0); }
 .cap { font-size: 13px; font-weight: 800; color: var(--accent-hi); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
 
 /* ─── добрый блок ─── */
-.good-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; align-items: start; }
+.good-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
 .dobro-block {
   background: var(--grad-bubble), var(--panel);
   border: 1px solid var(--border);
@@ -302,14 +302,13 @@ body.menu-open .sidebar { transform: translateX(0); }
 .dobro-block img {
   display: block;
   width: 100%;
-  height: auto;
+  min-height: 260px;
+  object-fit: contain;
   border-radius: 12px;
   margin: 0 auto;
 }
 .dobro-block.big { grid-column: 1 / -1; }
-.dobro-block.big img {
-  width: 60%;
-}
+.dobro-block.big img { width: 100%; }
 #cults .ph {
   display: block;
   max-width: 100%;
@@ -472,8 +471,7 @@ body.menu-open .sidebar-backdrop { opacity: 1; pointer-events: auto; }
   body.menu-close .mustchange-bar { padding-left: 0; }
   body.menu-open .sidebar-backdrop { opacity: 1; pointer-events: auto; }
   .good-row { grid-template-columns: 1fr; }
-  .dobro-block img { width: 100%; height: auto; }
-  .dobro-block.big img { width: 100%; }
+  .dobro-block img { width: 100%; min-height: 180px; object-fit: contain; }
   .content { padding: 0 14px; margin: 20px auto 40px; }
   .sup-body { flex-direction: column; }
   .sup-requests {
