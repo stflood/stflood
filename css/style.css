@@ -289,7 +289,7 @@ body.menu-open .sidebar { transform: translateX(0); }
 .cap { font-size: 13px; font-weight: 800; color: var(--accent-hi); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
 
 /* ─── добрый блок ─── */
-.good-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
+.good-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; align-items: start; }
 .dobro-block {
   background: var(--grad-bubble), var(--panel);
   border: 1px solid var(--border);
