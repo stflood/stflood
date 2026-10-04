@@ -75,85 +75,6 @@ function canManageUsers(role) {
   return role === 'co-owner' || role === 'owner' || role === 'creator';
 }
 
-/* ─── notification bell ─── */
-async function refreshNotifBadge() {
-  var el = byId('notifCount');
-  if (!el) return;
-  if (!currentUser || !isStaff(currentUser.role) || !initSupabase()) return;
-  var total = 0;
-  var res = await SB.from('requests').select('id').eq('status', 'open');
-  if (res.data && !res.error) total += res.data.length;
-  var ach = await SB.from('achievements').select('id').eq('status', 'pending');
-  if (ach.data && !ach.error) total += ach.data.length;
-  el.textContent = total;
-  el.style.display = total > 0 ? 'block' : 'none';
-}
-
-function notifyNewRequest() {
-  if (!currentUser || !isStaff(currentUser.role)) return;
-  if ('Notification' in window && Notification.permission === 'granted') {
-    try {
-      new Notification('Новое обращение в техподдержке', {
-        body: 'Кто-то написал на сайте — зайди и ответь.',
-        icon: 'img/avatar.jpg'
-      });
-    } catch (e) { /* noop */ }
-    return;
-  }
-  if (typeof document.hidden !== 'undefined' && document.hidden) return;
-  var t = byId('toastNotif');
-  if (!t) {
-    t = document.createElement('div');
-    t.id = 'toastNotif';
-    t.className = 'toast-notif';
-    document.body.appendChild(t);
-  }
-  t.innerHTML = '🔔 Новое обращение в техподдержке';
-  t.style.display = 'block';
-  clearTimeout(window.__notifToastT);
-  window.__notifToastT = setTimeout(function () {
-    var el = byId('toastNotif');
-    if (el) el.style.display = 'none';
-  }, 5000);
-}
-
-function notifyNewAchievement() {
-  if (!currentUser || !isStaff(currentUser.role)) return;
-  if ('Notification' in window && Notification.permission === 'granted') {
-    try {
-      new Notification('Достижение на проверке', {
-        body: 'Кто-то подал достижение — зайди и проверь.',
-        icon: 'img/avatar.jpg'
-      });
-    } catch (e) { /* noop */ }
-    return;
-  }
-  if (typeof document.hidden !== 'undefined' && document.hidden) return;
-  var t = byId('toastNotif');
-  if (!t) {
-    t = document.createElement('div');
-    t.id = 'toastNotif';
-    t.className = 'toast-notif';
-    document.body.appendChild(t);
-  }
-  t.innerHTML = '🏆 Новое достижение на проверке';
-  t.style.display = 'block';
-  clearTimeout(window.__notifToastT);
-  window.__notifToastT = setTimeout(function () {
-    var el = byId('toastNotif');
-    if (el) el.style.display = 'none';
-  }, 5000);
-}
-
-function ensureNotifPermission() {
-  if (!currentUser || !isStaff(currentUser.role)) return;
-  if ('Notification' in window && Notification.permission === 'default') {
-    try {
-      Notification.requestPermission();
-    } catch (e) { /* noop */ }
-  }
-}
-
 /* ─── session ─── */
 function saveSession() {
   if (!currentUser) return;
@@ -221,12 +142,8 @@ function renderHdrAuth() {
     var rb = byId('hdrReg');
     if (lb) lb.onclick = function () { openAuthModal('login'); };
     if (rb) rb.onclick = function () { openAuthModal('reg'); };
-} else {
-    var bell = isStaff(currentUser.role)
-      ? '<a class="hdr-btn notif-bell" id="notifBell" href="support.html" title="Уведомления о поддержке">' +
-        '🔔<span class="notif-count" id="notifCount" style="display:none">0</span></a>'
-      : '';
-    box.innerHTML = bell;
+  } else {
+    box.innerHTML = '';
   }
 }
 
@@ -285,14 +202,10 @@ function buildModals() {
   auth.innerHTML =
     '<div class="support-modal-box">' +
       '<div class="support-modal-title" id="authTitle">Вход</div>' +
-      '<div class="auth-switch">' +
-        '<button type="button" class="auth-switch-btn auth-switch-active" id="authTabLogin">Вход</button>' +
-        '<button type="button" class="auth-switch-btn" id="authTabReg">Регистрация</button>' +
-      '</div>' +
       '<div class="support-modal-label">Ник</div>' +
-      '<input id="authNickInput" type="text" placeholder="Придумай ник" autocomplete="off">' +
+      '<input id="authNickInput" type="text" placeholder="Введи ник" autocomplete="off">' +
       '<div class="support-modal-label">Пароль</div>' +
-      '<input id="authPassInput" type="password" placeholder="Минимум 4 символа" autocomplete="current-password">' +
+      '<input id="authPassInput" type="password" placeholder="Введи пароль" autocomplete="current-password">' +
       '<div class="sup-close-error" id="authError"></div>' +
       '<div class="support-modal-btns">' +
         '<button class="support-btn support-btn-ghost" id="authCancel">Отмена</button>' +
@@ -301,8 +214,6 @@ function buildModals() {
     '</div>';
   document.body.appendChild(auth);
 
-  byId('authTabLogin').onclick = function () { switchAuthMode('login'); };
-  byId('authTabReg').onclick = function () { switchAuthMode('reg'); };
   byId('authSubmit').onclick = submitAuth;
   byId('authCancel').onclick = function () { closeModalById('authModal'); };
 }
@@ -324,33 +235,20 @@ function openAuthModal(mode) {
   }
   buildModals();
   hideAuthError();
-  switchAuthMode(mode || 'login');
   openModalById('authModal');
   setTimeout(function () { var i = byId('authNickInput'); if (i) i.focus(); }, 60);
 }
 
-function switchAuthMode(mode) {
-  var isReg = mode === 'reg';
-  byId('authTitle').textContent = isReg ? 'Регистрация' : 'Вход';
-  byId('authSubmit').textContent = isReg ? 'Зарегистрироваться' : 'Войти';
-  byId('authTabLogin').classList.toggle('auth-switch-active', !isReg);
-  byId('authTabReg').classList.toggle('auth-switch-active', isReg);
-  byId('authNickInput').placeholder = isReg ? 'Придумай ник' : 'Введи ник';
-  byId('authPassInput').placeholder = isReg ? 'Минимум 4 символа' : 'Введи пароль';
-  hideAuthError();
-}
-
 async function submitAuth() {
-  var isReg = byId('authTabReg').classList.contains('auth-switch-active');
   var nick = byId('authNickInput').value.trim();
   var pass = byId('authPassInput').value;
 
-  if (!nick) { showAuthError('Придумай ник'); return; }
+  if (!nick) { showAuthError('Введи ник'); return; }
   if (nick.length < 2) { showAuthError('Ник минимум 2 символа'); return; }
   if (!pass) { showAuthError('Введи пароль'); return; }
   if (pass.length < 4) { showAuthError('Пароль минимум 4 символа'); return; }
 
-  var res = await rpc(isReg ? 'register_user' : 'login_user', { p_nick: nick, p_password: pass });
+  var res = await rpc('login_user', { p_nick: nick, p_password: pass });
   if (res.error) { showAuthError('Ошибка сервера: ' + res.error.message); return; }
   var d = res.data;
   if (d.error) { showAuthError(d.error); return; }
@@ -405,21 +303,7 @@ function subscribeRealtime() {
   if (!SB || realtimeSubscribed) return;
   realtimeSubscribed = true;
   SB.channel('support-feed')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'request_messages' }, function () {
-      refreshNotifBadge();
-      if (typeof loadFeed === 'function') loadFeed();
-    })
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'requests' }, function (p) {
-      refreshNotifBadge();
-      if (p && p.eventType === 'INSERT') notifyNewRequest();
-      if (typeof loadFeed === 'function') loadFeed();
-    })
     .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, function () { refreshPresence(); })
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'achievements' }, function (p) {
-      refreshNotifBadge();
-      if (p && p.eventType === 'INSERT') notifyNewAchievement();
-      if (typeof loadAch === 'function') loadAch();
-    })
     .on('postgres_changes', { event: '*', schema: 'public', table: 'news' }, function () {
       if (typeof loadNews === 'function') loadNews();
     })
@@ -486,8 +370,6 @@ async function initAuth() {
   renderMustChangeBanner();
   refreshPresence();
   subscribeRealtime();
-  refreshNotifBadge();
-  ensureNotifPermission();
   if (typeof onAuthChange === 'function') onAuthChange();
 }
 
