@@ -1,7 +1,5 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-.auth-switch-btn[data-mode="reg"], #hdrReg, #suReg, #supRegBtn { display: none !important; }
-
 :root {
   --bg: #000000;
   --panel: #000000;

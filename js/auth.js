@@ -202,6 +202,10 @@ function buildModals() {
   auth.innerHTML =
     '<div class="support-modal-box">' +
       '<div class="support-modal-title" id="authTitle">Вход</div>' +
+      '<div class="auth-switch">' +
+        '<button type="button" class="auth-switch-btn auth-switch-active" id="authTabLogin">Вход</button>' +
+        '<button type="button" class="auth-switch-btn" id="authTabReg">Регистрация</button>' +
+      '</div>' +
       '<div class="support-modal-label">Ник</div>' +
       '<input id="authNickInput" type="text" placeholder="Введи ник" autocomplete="off">' +
       '<div class="support-modal-label">Пароль</div>' +
@@ -214,6 +218,8 @@ function buildModals() {
     '</div>';
   document.body.appendChild(auth);
 
+  byId('authTabLogin').onclick = function () { switchAuthMode('login'); };
+  byId('authTabReg').onclick = function () { switchAuthMode('reg'); };
   byId('authSubmit').onclick = submitAuth;
   byId('authCancel').onclick = function () { closeModalById('authModal'); };
 }
@@ -233,22 +239,35 @@ function openAuthModal(mode) {
     alert('Настрой Supabase в js/config.js');
     return;
   }
-  buildModals();
+buildModals();
   hideAuthError();
+  switchAuthMode(mode || 'login');
   openModalById('authModal');
   setTimeout(function () { var i = byId('authNickInput'); if (i) i.focus(); }, 60);
 }
 
+function switchAuthMode(mode) {
+  var isReg = mode === 'reg';
+  byId('authTitle').textContent = isReg ? 'Регистрация' : 'Вход';
+  byId('authSubmit').textContent = isReg ? 'Зарегистрироваться' : 'Войти';
+  byId('authTabLogin').classList.toggle('auth-switch-active', !isReg);
+  byId('authTabReg').classList.toggle('auth-switch-active', isReg);
+  byId('authNickInput').placeholder = isReg ? 'Придумай ник' : 'Введи ник';
+  byId('authPassInput').placeholder = isReg ? 'Минимум 4 символа' : 'Введи пароль';
+  hideAuthError();
+}
+
 async function submitAuth() {
+  var isReg = byId('authTabReg').classList.contains('auth-switch-active');
   var nick = byId('authNickInput').value.trim();
   var pass = byId('authPassInput').value;
 
-  if (!nick) { showAuthError('Введи ник'); return; }
+  if (!nick) { showAuthError(isReg ? 'Придумай ник' : 'Введи ник'); return; }
   if (nick.length < 2) { showAuthError('Ник минимум 2 символа'); return; }
   if (!pass) { showAuthError('Введи пароль'); return; }
   if (pass.length < 4) { showAuthError('Пароль минимум 4 символа'); return; }
 
-  var res = await rpc('login_user', { p_nick: nick, p_password: pass });
+  var res = await rpc(isReg ? 'register_user' : 'login_user', { p_nick: nick, p_password: pass });
   if (res.error) { showAuthError('Ошибка сервера: ' + res.error.message); return; }
   var d = res.data;
   if (d.error) { showAuthError(d.error); return; }
