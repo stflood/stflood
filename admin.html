@@ -60,43 +60,7 @@
 <script src="js/admin.js"></script>
 <script src="js/prank.js"></script>
 
-<script>
-/* ─── открытие/закрытие меню (только телефон) ─── */
-var sidebar = document.getElementById('sidebar');
-var backdrop = document.getElementById('sidebarBackdrop');
-var isMobile = function () { return window.innerWidth <= 900; };
-function openMenu() {
-  if (!isMobile()) return;
-  document.body.classList.remove('menu-close');
-  document.body.classList.add('menu-open');
-  if (sidebar) sidebar.classList.remove('closed');
-}
-function closeMenu() {
-  if (!isMobile()) return;
-  document.body.classList.remove('menu-open');
-  document.body.classList.add('menu-close');
-  if (sidebar) sidebar.classList.add('closed');
-}
-var mt = document.getElementById('menuToggle');
-if (mt) mt.addEventListener('click', function () {
-  if (!isMobile()) return;
-  var open = document.body.classList.contains('menu-open');
-  if (open) { closeMenu(); } else { openMenu(); }
-});
-var sc = document.getElementById('sidebarClose');
-if (sc) sc.addEventListener('click', closeMenu);
-if (backdrop) backdrop.addEventListener('click', closeMenu);
-var sa = document.querySelectorAll('.sidebar .tabs a');
-for (var si = 0; si < sa.length; si++) {
-  sa[si].addEventListener('click', function () { if (isMobile()) closeMenu(); });
-}
-window.addEventListener('resize', function () {
-  if (!isMobile()) {
-    document.body.classList.remove('menu-open', 'menu-close');
-    if (sidebar) sidebar.classList.remove('closed');
-  }
-});
-</script>
+<script src="js/menu.js"></script>
 </body>
 </html>
 
