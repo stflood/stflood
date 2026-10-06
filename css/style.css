@@ -533,6 +533,28 @@ body.menu-open .sidebar-backdrop { opacity: 1; pointer-events: auto; }
   border-radius: 6px;
 }
 
+.admin-error {
+  border-color: var(--danger) !important;
+  background: rgba(var(--danger-rgb), .08);
+}
+
+.admin-error .admin-name {
+  color: var(--danger);
+  letter-spacing: 3px;
+  text-shadow: 0 0 12px rgba(var(--danger-rgb), .6);
+}
+
+.admin-nofile {
+  margin: 14px 0 4px;
+  color: var(--danger);
+  font-family: var(--dev-font);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-align: center;
+  text-shadow: 0 0 12px rgba(var(--danger-rgb), .5);
+}
+
 .empty {
   color: var(--text-dim2);
   font-size: 15px;
