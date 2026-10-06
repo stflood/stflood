@@ -2340,3 +2340,19 @@ body::after {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* на телефонах видео вписываем целиком, чтобы не обрезалось по краям */
+@media (max-width: 900px) {
+  .prank-overlay {
+    padding: 4vh 4vw;
+  }
+
+  .prank-overlay img,
+  .prank-overlay video {
+    width: auto;
+    height: auto;
+    max-width: 92vw;
+    max-height: 76vh;
+    object-fit: contain;
+  }
+}
