@@ -2300,3 +2300,43 @@ body::after {
   .admins-title { font-size: 22px; letter-spacing: 3px; }
   .header-title { letter-spacing: 2px; }
 }
+
+/* ─── кнопка-прикол ─── */
+.prank-count {
+  display: block;
+  font-family: var(--dev-font);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--accent-hi);
+  opacity: .7;
+  padding: 2px 0 4px;
+  min-height: 14px;
+}
+
+.prank-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  z-index: 99999;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.prank-overlay img,
+.prank-overlay video {
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  animation: prankFade .35s ease;
+}
+
+@keyframes prankFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
