@@ -488,12 +488,15 @@ body.menu-open .sidebar-backdrop { opacity: 1; pointer-events: auto; }
 .admins-row {
   display: flex;
   justify-content: center;
+  align-items: stretch;
   gap: 18px;
   flex-wrap: wrap;
   margin-bottom: 18px;
 }
 .admin {
-  flex: 0 1 240px;
+  flex: 0 1 264px;
+  display: flex;
+  flex-direction: column;
   background: var(--panel);
   border: 2px solid var(--accent);
   border-radius: 8px;
@@ -506,31 +509,47 @@ body.menu-open .sidebar-backdrop { opacity: 1; pointer-events: auto; }
   margin-bottom: 4px;
 }
 .admin-name {
-  font-size: 22px;
+  font-size: 19px;
   font-weight: 800;
   color: var(--text-strong);
+  margin-bottom: 2px;
+  white-space: nowrap;
 }
 .admin-role {
   font-size: 15px;
   font-weight: 600;
   color: var(--accent-lite);
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 .admin-founder {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent-lite);
+  letter-spacing: .5px;
+  margin-bottom: 16px;
+}
+
+.admin-staff {
+  margin-top: 14px;
+  padding: 9px 6px;
+  border-top: 2px solid var(--accent);
+  color: var(--accent);
   font-size: 13px;
   font-weight: 800;
-  color: var(--gold);
-  letter-spacing: .5px;
-  margin-top: -8px;
-  margin-bottom: 14px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(var(--accent-rgb), .6);
 }
 .admin img {
-  max-width: 100%;
-  max-height: 40vh;
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
   display: block;
   margin: 0 auto;
   border: 2px solid var(--info);
   border-radius: 6px;
+  background: var(--input-bg);
 }
 
 .admin-error {
@@ -545,6 +564,10 @@ body.menu-open .sidebar-backdrop { opacity: 1; pointer-events: auto; }
 }
 
 .admin-nofile {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 14px 0 4px;
   color: var(--danger);
   font-family: var(--dev-font);
@@ -1960,6 +1983,8 @@ body.sup-page .sup-dialog-input {
   .modal-box, .support-modal-box { width: 92vw; }
   .admin { flex: 1 1 100%; }
   .admins-title { font-size: 26px; margin: 8px 0 16px; }
+  .admin img { height: 170px; }
+  .admin-name { font-size: 16px; }
   .sidebar-logo { font-size: 17px; }
   .edit-log p, .users-row { overflow-x: auto; }
 }
@@ -2226,6 +2251,7 @@ body::after {
 
 .admin-name,
 .admin-role,
+.admin-founder,
 .profile-nick,
 .news-card-title {
   text-transform: none;
@@ -2376,5 +2402,43 @@ body::after {
     max-width: 92vw;
     max-height: 76vh;
     object-fit: contain;
+  }
+}
+
+/* ─── бейдж хостинга (Powered by Netlify) ───
+   он висит в правом нижнем углу и перекрывает кнопки —
+   поднимаем модалки и нижние элементы над ним */
+@media (max-width: 900px) {
+  .support-modal-box {
+    margin-bottom: 84px;
+  }
+
+  .content {
+    padding-bottom: 84px;
+  }
+
+  .sup-page .content,
+  body.sup-page .content {
+    padding-bottom: 84px;
+  }
+
+  .profile-actions {
+    padding-bottom: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .support-modal-box {
+    margin-bottom: 100px;
+  }
+
+  .support-modal-btns {
+    justify-content: flex-start;
+    padding-right: 8px;
+  }
+
+  .content,
+  body.sup-page .content {
+    padding-bottom: 100px;
   }
 }

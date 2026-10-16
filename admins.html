@@ -32,8 +32,6 @@
     <a href='links.html'><span class='ico'>🔗</span>Связи</a>
     <a href='admins.html' class="active"><span class='ico'>👑</span>Админы</a>
 <a href='users.html'><span class='ico'>👥</span>Пользователи</a>
-    <a href="#" id="prankBtn"><span class='ico'>🎃</span>Не нажимай</a>
-    <span class="prank-count" id="prankCount"></span>
   </div>
   <div class="sidebar-user" id="sidebarUser"></div>
 
@@ -42,7 +40,7 @@
 
 <div class="content">
 
-  <div class="admins-title">Список действующих админов:</div>
+  <div class="admins-title">Список высших админов:</div>
 
   <div class="admins-row">
     <div class="admin">
@@ -59,28 +57,37 @@
       <img src="img/yellow.png" alt="yellow.png">
     </div>
 
-    <div class="admin">
+    <div class="admin admin-error">
       <div class="admin-num">3.</div>
-      <div class="admin-name">The Second Coming</div>
+      <div class="admin-name">ERROR</div>
       <div class="admin-role">Ст. Админ</div>
-      <div class="admin-founder">Создатель сайта</div>
-      <img src="img/second.png" alt="second.png">
+      <div class="admin-nofile">FILE NOT FOUND</div>
     </div>
   </div>
 
+  <div class="admins-title">Список младших админов:</div>
+
   <div class="admins-row">
     <div class="admin admin-error">
-      <div class="admin-num">4.</div>
+      <div class="admin-num">1.</div>
       <div class="admin-name">ERROR</div>
       <div class="admin-role">Мл. Админ</div>
       <div class="admin-nofile">FILE NOT FOUND</div>
     </div>
 
     <div class="admin">
-      <div class="admin-num">5.</div>
+      <div class="admin-num">2.</div>
       <div class="admin-name">The Chosen One</div>
       <div class="admin-role">Монтажёр</div>
       <img src="img/chosen.png" alt="chosen.png">
+    </div>
+
+    <div class="admin">
+      <div class="admin-num">3.</div>
+      <div class="admin-name">The Second Coming</div>
+      <div class="admin-founder">Программист</div>
+      <img src="img/second.png" alt="second.png">
+      <div class="admin-staff">Стафф сайта</div>
     </div>
   </div>
 
@@ -89,7 +96,6 @@
 <script src="js/config.js"></script>
 <script src="js/vendor/supabase.min.js"></script>
 <script src="js/auth.js"></script>
-<script src="js/prank.js"></script>
 <script>initAuth();</script>
 
 <script src="js/menu.js"></script>
