@@ -323,9 +323,6 @@ function subscribeRealtime() {
   realtimeSubscribed = true;
   SB.channel('support-feed')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, function () { refreshPresence(); })
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'news' }, function () {
-      if (typeof loadNews === 'function') loadNews();
-    })
     .subscribe();
 }
 
